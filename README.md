@@ -309,3 +309,33 @@ end
   person.valid?(:account_setup)  # => false
   person.errors.messages  # => {:email=>["has already been taken"], :age=>["is not a number"], :name=>["can't be blank"]}
   ```
+
+# 4. Strict Validations
+
+## :strict
+
+- Raises `ActiveModel::StrictValidationFailed` when the object is invalid.
+
+```ruby
+class Person < ApplicationRecord
+  validates :name, presence: { strict: true }
+end
+```
+
+```bash
+Person.new.valid?
+# ActiveModel::StrictValidationFailed: Name can't be blank
+```
+
+- Custom exception with `:strict`:
+
+```ruby
+class Person < ApplicationRecord
+  validates :token, presence: true, uniqueness: true, strict: TokenGenerationException
+end
+```
+
+```bash
+Person.new.valid?
+# TokenGenerationException: Token can't be blank
+```

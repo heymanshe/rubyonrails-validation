@@ -1,5 +1,5 @@
 class Person < ApplicationRecord
-  validates :name, presence: { message: "must be given please" }
+  validates :name, presence: { strict: true }
 
   validates :email, confirmation: true, presence: true, uniqueness: true, on: :create
 
