@@ -10,12 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_07_104351) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_07_111731) do
   create_table "accounts", force: :cascade do |t|
     t.string "subdomain"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "supplier_id", null: false
+    t.string "password"
+    t.string "password_confirmation"
     t.index ["supplier_id"], name: "index_accounts_on_supplier_id"
   end
 
@@ -36,6 +38,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_07_104351) do
     t.string "token"
   end
 
+  create_table "computers", force: :cascade do |t|
+    t.string "market"
+    t.string "device_type"
+    t.string "mouse"
+    t.string "trackpad"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "events", force: :cascade do |t|
     t.integer "priority"
     t.datetime "created_at", null: false
@@ -51,6 +62,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_07_104351) do
 
   create_table "libraries", force: :cascade do |t|
     t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "orders", force: :cascade do |t|
+    t.string "payment_type"
+    t.string "card_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

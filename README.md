@@ -339,3 +339,67 @@ end
 Person.new.valid?
 # TokenGenerationException: Token can't be blank
 ```
+
+# 5. Conditional Validation
+
+
+## 5.1 Using a Symbol with :if and :unless
+
+- Associates a validation with a method that determines when it should run.
+
+```ruby
+class Order < ApplicationRecord
+  validates :card_number, presence: true, if: :paid_with_card?
+
+  def paid_with_card?
+    payment_type == "card"
+  end
+end
+```
+
+## 5.2 Using a Proc with :if and :unless
+
+- Allows inline conditions instead of defining separate methods.
+
+```ruby
+class Account < ApplicationRecord
+  validates :password, confirmation: true,
+    unless: Proc.new { |a| a.password.blank? }
+end
+```
+
+- Using a lambda for inline conditions:
+
+```ruby
+validates :password, confirmation: true, unless: -> { password.blank? }
+```
+
+## 5.3 Grouping Conditional Validations
+
+- `with_options` helps group multiple validations under a single condition.
+
+```ruby
+class User < ApplicationRecord
+  with_options if: :is_admin? do |admin|
+    admin.validates :password, length: { minimum: 10 }
+    admin.validates :email, presence: true
+  end
+end
+```
+
+- All validations inside the block are applied only if `is_admin?` is true.
+
+## 5.4 Combining Validation Conditions
+
+- Multiple conditions can be used together with an array.
+
+```ruby
+class Computer < ApplicationRecord
+  validates :mouse, presence: true,
+                    if: [Proc.new { |c| c.market.retail? }, :desktop?],
+                    unless: Proc.new { |c| c.trackpad.present? }
+end
+```
+
+- The validation only runs when all `:if` conditions are met and none of the `:unless` conditions are true.
+

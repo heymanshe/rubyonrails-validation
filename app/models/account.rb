@@ -11,4 +11,7 @@ class Account < ApplicationRecord
   def self.reserved_subdomains
     %w[www admin root superuser]
   end
+
+  validates :password, confirmation: true, unless: Proc.new { |a| a.password.blank? }
+  # or unless: -> { password.blank? }
 end
