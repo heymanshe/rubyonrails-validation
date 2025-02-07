@@ -194,3 +194,118 @@
 - ```ruby
   validates_associated :books
   ```
+
+# 3. Common Validation Options
+
+
+## :allow_nil
+
+- Skips validation if the attribute is `nil`.
+
+```ruby
+  class Coffee < ApplicationRecord
+    validates :size, inclusion: { in: %w(small medium large),
+      message: "%{value} is not a valid size" }, allow_nil: true
+  end
+  ```
+
+```bash
+Coffee.create(size: nil).valid?  # => true
+Coffee.create(size: "mega").valid?  # => false
+```
+
+## :allow_blank
+
+- Similar to `:allow_nil`, but skips validation for blank values (`nil` or empty string `""`).
+
+ ```ruby
+  class Topic < ApplicationRecord
+    validates :title, length: { is: 5 }, allow_blank: true
+  end
+  ```
+
+```bash
+Topic.create(title: "").valid?  # => true
+Topic.create(title: nil).valid?  # => true
+```
+
+## :message
+
+- Allows specifying a custom error message when validation fails.
+
+- Supports placeholders like `%{value}`, `%{attribute}`, and `%{model}`.
+
+```ruby
+class Person < ApplicationRecord
+  validates :name, presence: { message: "must be given please" }
+  validates :age, numericality: { message: "%{value} seems wrong" }
+end
+```
+
+- Can also accept a `Proc`:
+```ruby
+class Person < ApplicationRecord
+  validates :username,
+    uniqueness: {
+      message: ->(object, data) do
+        "Hey #{object.name}, #{data[:value]} is already taken."
+      end
+    }
+end
+```
+
+## :on
+
+- Specifies when the validation should be executed.
+
+- Default: Runs on both `create` and `update`.
+
+- Options:
+
+`on: :create` → Runs validation only when creating a new record.
+
+`on: :update` → Runs validation only when updating a record.
+
+- Custom contexts can be defined and explicitly triggered.
+
+```ruby
+class Person < ApplicationRecord
+  validates :email, uniqueness: true, on: :create
+  validates :age, numericality: true, on: :update
+  validates :name, presence: true
+end
+```
+
+```bash
+person = Person.new(age: 'thirty-three')
+person.valid?(:account_setup)  # => false
+person.errors.messages  # => {:email=>["has already been taken"], :age=>["is not a number"]}
+```
+
+- Custom contexts:
+```ruby
+class Book
+  include ActiveModel::Validations
+  validates :title, presence: true, on: [:update, :ensure_title]
+end
+```
+
+ ```bash
+  book = Book.new(title: nil)
+  book.valid?(:ensure_title)  # => false
+  book.errors.messages  # => {:title=>["can't be blank"]}
+  ```
+
+- When using a custom context, it also includes validations without a context:
+ ```ruby
+  class Person < ApplicationRecord
+    validates :email, uniqueness: true, on: :account_setup
+    validates :age, numericality: true, on: :account_setup
+    validates :name, presence: true
+  end
+```
+ ```bash
+  person = Person.new
+  person.valid?(:account_setup)  # => false
+  person.errors.messages  # => {:email=>["has already been taken"], :age=>["is not a number"], :name=>["can't be blank"]}
+  ```

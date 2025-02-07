@@ -8,4 +8,11 @@ class User < ApplicationRecord
   # validates :is_admin, exclusion: { in: [nil] }
   validates :login, absence: true
   validates :email, uniqueness: true
+
+  validates :username,
+    uniqueness: {
+      message: ->(object, data) do
+        "Hey #{object.name}, #{data[:value]} is already taken."
+      end
+    }
 end
