@@ -10,10 +10,103 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_06_090946) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_07_091819) do
+  create_table "accounts", force: :cascade do |t|
+    t.string "subdomain"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "supplier_id", null: false
+    t.index ["supplier_id"], name: "index_accounts_on_supplier_id"
+  end
+
+  create_table "books", force: :cascade do |t|
+    t.string "title"
+    t.integer "library_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["library_id"], name: "index_books_on_library_id"
+  end
+
+  create_table "coffees", force: :cascade do |t|
+    t.string "name"
+    t.decimal "price"
+    t.string "size"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.integer "priority"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "holidays", force: :cascade do |t|
+    t.string "name"
+    t.integer "year"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "libraries", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "people", force: :cascade do |t|
     t.string "name", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "email"
+    t.boolean "terms_of_service"
+    t.string "surname"
   end
+
+  create_table "players", force: :cascade do |t|
+    t.string "name"
+    t.integer "points"
+    t.integer "games_played"
+    t.integer "age"
+    t.float "rating"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.decimal "salary"
+    t.float "win_percentage"
+    t.integer "losses"
+    t.integer "draws"
+    t.integer "experience"
+  end
+
+  create_table "promotions", force: :cascade do |t|
+    t.date "start_date"
+    t.date "end_date"
+    t.string "legacy_code"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "suppliers", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "name"
+    t.text "bio"
+    t.string "password"
+    t.string "registration_number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "is_admin"
+    t.string "login"
+    t.string "username"
+    t.string "status"
+    t.string "email"
+    t.index ["email"], name: "index_users_on_email", unique: true
+  end
+
+  add_foreign_key "accounts", "suppliers"
+  add_foreign_key "books", "libraries"
 end

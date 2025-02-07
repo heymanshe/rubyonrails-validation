@@ -93,3 +93,104 @@
     - `create` and `save` trigger validations before saving.
     - `create!` and `save!` raise exceptions when validations fail.
     - Methods like `insert`, `update_all` skip validations and should be used carefully.
+
+
+# 2. Validation Helpers
+
+## 2.1 acceptance
+
+- Ensures that a checkbox (e.g., terms of service agreement) is checked.
+
+- ```ruby
+  validates :terms_of_service, acceptance: true
+  ```
+
+## 2.2 confirmation
+
+- Validates that two fields have the same value (e.g., password confirmation).
+
+- ```ruby
+  validates :email, confirmation: true
+  validates :email_confirmation, presence: true
+  ```
+
+## 2.3 comparison
+
+- Validates that one attribute is compared to another (e.g., start_date must be earlier than end_date).
+
+- ```ruby
+  validates :end_date, comparison: { greater_than: :start_date }
+  ```
+  
+## 2.4 format 
+
+- Ensures that an attribute matches a specific regular expression pattern (e.g., email format).
+
+- ```ruby
+  validates :legacy_code, format: { with: /\A[a-zA-Z]+\z/, message: "only allows letters" }
+  ```
+  
+## 2.5 inclusion
+
+- Ensures that the attribute value is included in a given set of values (e.g., predefined list of options).
+
+- ```ruby
+  validates :size, inclusion: { in: %w(small medium large), message: "%{value} is not a valid size" }
+  ```
+
+## 2.6 exclusion 
+
+- Ensures that the attribute value is not included in a given set (e.g., reserved usernames).
+
+- ```ruby
+  validates :subdomain, exclusion: { in: %w(www us ca jp), message: "%{value} is reserved." }
+  ```
+
+## 2.7 length 
+
+- Validates the length of an attribute (e.g., string length constraints).
+
+- ```ruby
+  validates :name, length: { minimum: 2 }
+  validates :password, length: { in: 6..20 }
+  ```
+
+## 2.8 numericality 
+
+- Ensures that an attribute contains only numeric values.
+
+- ```ruby
+  validates :points, numericality: true
+  ```
+
+## 2.9 presence 
+
+- Ensures that an attribute is not empty or nil.
+
+- ```ruby
+  validates :name, :login, :email, presence: true
+  ```
+  
+## 2.10 absence 
+
+- Ensures that an attribute is empty or nil.
+
+- ```ruby
+  validates :name, :login, :email, absence: true
+  ```
+  
+## 2.11 uniqueness 
+
+- Ensures that an attribute's value is unique in the database.
+
+- ```ruby
+  validates :email, uniqueness: true
+  ```
+
+## 2.12 validates_associated 
+
+- Used when model has associations that always need to be validated.
+
+- ```ruby
+  validates_associated :books
+  ```
