@@ -403,3 +403,59 @@ end
 
 - The validation only runs when all `:if` conditions are met and none of the `:unless` conditions are true.
 
+# 6. Custom Validations
+
+## 6.1 Custom Validators
+
+- Create a class inheriting from `ActiveModel::Validator`.
+
+- Implement the validate method.
+
+```ruby
+class MyValidator < ActiveModel::Validator
+  def validate(record)
+    unless record.name.start_with? "X"
+      record.errors.add :name, "Provide a name starting with X, please!"
+    end
+  end
+end
+
+
+class Person < ApplicationRecord
+  validates_with MyValidator
+end
+```
+
+## 6.2 Custom Methods
+
+- Define methods that validate model attributes and add errors.
+
+- Register methods using validate.
+
+```ruby
+class Invoice < ApplicationRecord
+  validate :expiration_date_cannot_be_in_the_past,
+           :discount_cannot_be_greater_than_total_value
+
+  def expiration_date_cannot_be_in_the_past
+    if expiration_date.present? && expiration_date < Date.today
+      errors.add(:expiration_date, "can't be in the past")
+    end
+  end
+
+  def discount_cannot_be_greater_than_total_value
+    if discount > total_value
+      errors.add(:discount, "can't be greater than total value")
+    end
+  end
+end
+```
+
+## 6.3 Listing Validators
+
+- Use validators to list all validations.
+
+```ruby
+  Person.validators
+  Person.validators_on(:name)
+```
