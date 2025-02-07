@@ -8,3 +8,9 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+ .field_with_errors {
+  border: 2px solid red;
+  padding: 5px;
+  background-color: #ffcccc;
+}

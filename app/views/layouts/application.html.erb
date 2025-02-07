@@ -26,5 +26,9 @@
     <%= yield %>
     <%# text_field :person, :email %>
     <%#= text_field :person, :email_confirmation %>
+    <% if flash[:notice] %>
+      <p style="color: green;"><%= flash[:notice] %></p>
+    <% end %>
+
   </body>
 </html>

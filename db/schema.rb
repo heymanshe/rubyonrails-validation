@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_07_120016) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_07_120344) do
   create_table "accounts", force: :cascade do |t|
     t.string "subdomain"
     t.datetime "created_at", null: false
@@ -19,6 +19,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_07_120016) do
     t.string "password"
     t.string "password_confirmation"
     t.index ["supplier_id"], name: "index_accounts_on_supplier_id"
+  end
+
+  create_table "articles", force: :cascade do |t|
+    t.string "title"
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "books", force: :cascade do |t|
