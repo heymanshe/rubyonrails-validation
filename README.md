@@ -459,3 +459,63 @@ end
   Person.validators
   Person.validators_on(:name)
 ```
+
+# 7. Validation Errors
+
+## 7.1 errors
+
+- Provides access to all validation errors.
+
+```ruby
+class Person < ApplicationRecord
+  validates :name, presence: true, length: { minimum: 3 }
+end
+```
+```bash
+person = Person.new
+person.valid?
+person.errors.full_messages #=> ["Name can't be blank", "Name is too short (minimum is 3 characters)"]
+```
+## 7.2 errors[]
+
+- Retrieves errors for a specific attribute.
+
+```bash
+person.errors[:name] #=> ["can't be blank", "is too short (minimum is 3 characters)"]
+```
+
+## 7.3 errors.where
+
+- Filters errors based on attributes and types.
+
+```bash
+person.errors.where(:name, :too_short) #=> [...] 
+```
+
+## 7.4 errors.add
+
+- Manually adds errors.
+
+```ruby
+errors.add :name, :too_plain, message: "is not cool enough"
+```
+
+# 7.5 errors[:base]
+
+- Adds errors not tied to a specific attribute.
+
+```ruby
+errors.add :base, :invalid, message: "This person is invalid because ..."
+```
+
+## 7.6 errors.size
+
+- Returns the total number of validation errors.
+
+## 7.7 errors.clear
+
+- Clears all errors but does not make an object valid.
+
+```bash
+person.errors.clear
+```
